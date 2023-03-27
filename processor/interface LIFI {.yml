@@ -1,0 +1,112 @@
+interface LIFI {
+    
+    getPossibilities(request?: PossibilitiesRequest): Promise<PossibilitiesResponse> // request available chains, bridges, exchanges, tokens
+    
+    getRoutes(routesRequest: RoutesRequest): Promise<RoutesResponse>
+    
+    getTools(request?: ToolsRequest): Promise<ToolsResponse>
+    
+    executeRoute(signer: Signer, route: Route, settings?: ExecutionSettings): Promise<Route>
+    
+    resumeRoute(signer: JsonRpcSigner, route: Route, settings?: ExecutionSettings): Promise<Route> // skips completed steps; 
+    
+    getStepTransaction(step: Step): Promise<StepTransactionResponse>
+    
+    stopExecution(route: Route): Route // completely halts execution; deletes all execution data for given route
+    
+    moveExecutionToBackground(route: Route): void // Route execution continues until a user interaction (tx singing) is required
+    
+    setConfig(configUpdate: ConfigUpdate): Config
+    
+    getConfig(): Config
+    
+    updateExecutionSettings(settings: ExecutionSettings, route: Route): void
+
+    getActiveRoutes(): Route[]
+    
+    getActiveRoute(route: Route): Route | undefined 
+    
+    getTokenBalance(walletAddress: string, token: Token): Promise<TokenAmount | null>
+    
+    getTokenBalances(walletAddress: string, tokens: Token[]): Promise<TokenAmount[]>
+    
+    getTokenBalancesForChains(walletAddress: string, tokensByChain: { [chainId: number]: Token[] }): Promise<{ [chainId: number]: TokenAmount[] }> 
+interface RoutesRequest {
+    fromChainId: number;
+    fromAmount: string;
+    fromTokenAddress: string;
+    fromAddress?: string;
+    toChainId: number;
+    toTokenAddress: string;
+    toAddress?: string;
+    options?: RouteOptions; 
+} interface RouteOptions {
+    order?: Order; // 'RECOMMENDED' | 'FASTEST' | 'CHEAPEST' | 'SAFEST'
+    slippage?: number;  // expressed as decimal proportion: 0.03 represents 3%
+    infiniteApproval?: boolean;
+    allowSwitchChain?: boolean;
+    integrator?: string; // string telling us who you are
+    referrer?: string; // string telling us who referred you to us
+    fee?: number; // expressed as decimal proportion: 0.03 represents 3% 
+    bridges?: AllowDenyPrefer;
+    exchanges?: AllowDenyPrefer;
+}
+
+interface AllowDenyPrefer {
+    allow?: string[];
+    deny?: string[];
+    prefer?: string[];
+}async function getTools(
+  request?: ToolsRequest,
+  options?: RequestOptions
+): Promise<ToolsResponse>
+
+async function getChains(): Promise<Chain[]>
+
+async function getTokens(
+  request?: TokensRequest,
+  options?: RequestOptions
+): Promise<TokensResponse>
+const getTools = async () => {
+    const result = await axios.get('https://li.quest/v1/tools');
+    return result.data;const getTokens = async () => {
+    const optionalFilter = ['ETH', 137] // Both numeric and mnemonic can be used
+    const result = await axios.get('https://li.quest/v1/tokens',
+        {params: {chains: optionalFilter.join(',')}});
+    return result.data;
+}
+}const getTools = async () => {
+    const result = await axios.get('https://li.quest/v1/tools');
+    return result.data;
+}const getTools = async () => {
+    const result = await axios.get('https://li.quest/v1/tools');
+    return result.data;
+}const getToken = async (chain, token) => {
+    const result = await axios.get('https://li.quest/v1/token', {
+        params: {
+            chain,
+            token,
+        }
+    });
+    return result.data;
+}const getConnections = async (fromChain, toChain, fromToken, toToken) => {
+    const result = await axios.get('https://li.quest/v1/connections', {
+        params: {
+            fromChain,
+            toChain,
+            fromToken,
+            toToken,
+        }
+    });
+    return result.data;
+}const getConnections = async (fromChain, toChain, fromToken, toToken) => {
+    const result = await axios.get('https://li.quest/v1/connections', {
+        params: {
+            fromChain,
+            toChain,
+            fromToken,
+            toToken,
+        }
+    });
+    return result.data;
+}
